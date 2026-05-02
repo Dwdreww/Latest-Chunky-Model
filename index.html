@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chunky 3.5- AI-Powered Content Safety</title>
+    <meta name="description" content="Professional AI tool for detecting toxic comments and extracting text from images">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=11">
+</head>
+<body>
+    <!-- Futuristic 3D Background Canvas -->
+    <div id="blockchain-background" class="blockchain-background">
+        <canvas id="bg-canvas"></canvas>
+        <div class="grid-overlay"></div>
+        <div class="particles-container" id="particles-container"></div>
+    </div>
+    
+    <!-- Main App Container -->
+    <div class="app-container">
+        <!-- Left Sidebar (Floating Card) -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+            <div class="logo">
+                    <div class="logo-icon">🛡️</div>
+                    <span class="logo-text">Chunky 3.5</span>
+                </div>
+                <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-tool="toxicity">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                    <span>Toxicity Checker</span>
+                </button>
+                
+                <button class="nav-item" data-tool="ocr">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <path d="M9 9h6M9 15h6M9 12h6"/>
+                    </svg>
+                    <span>OCR Extractor</span>
+                </button>
+                
+                <button class="nav-item" data-tool="dashboard">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"/>
+                        <rect x="14" y="3" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                    <span>Dashboard</span>
+                </button>
+                
+                <button class="nav-item" data-tool="about">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 16v-4M12 8h.01"/>
+                    </svg>
+                    <span>About</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Toxicity Checker View -->
+            <div class="tool-view active" id="toxicity-view">
+                <div class="workspace-layout">
+                    <!-- Center: Input Area -->
+                    <div class="workspace-center">
+                        <div class="workspace-card">
+                            <div class="workspace-header">
+                                <h2>Toxicity Checker</h2>
+                                <p class="workspace-subtitle">Analyze text for toxic content and harmful English language only</p>
+                            </div>
+                            
+                            <div class="text-input-area">
+                                <div class="text-editor-wrapper">
+                                    <div class="text-editor" id="text-editor" contenteditable="true" 
+                                         data-placeholder="Start typing or paste your text here to check for toxicity..."></div>
+                                </div>
+                                
+                                <div class="editor-footer">
+                                    <div class="editor-stats">
+                                        <span class="word-count" id="word-count">0 words</span>
+                                        <span class="char-count" id="char-count">0 characters</span>
+                                    </div>
+                                    <div class="editor-actions">
+                                        <button class="btn-secondary" id="clear-btn">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                            </svg>
+                                            Clear
+                                        </button>
+                                        <button class="btn-primary" id="analyze-btn">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <circle cx="11" cy="11" r="8"/>
+                                                <path d="M21 21l-4.35-4.35"/>
+                                            </svg>
+                                            <span>Analyze Toxicity</span>
+                                            <div class="btn-loader"></div>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <button class="example-btn" id="example-btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                    </svg>
+                                    Try Sample Text
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Results Panel -->
+                    <div class="workspace-right">
+                        <div class="results-panel" id="toxicity-results">
+                            <div class="results-placeholder">
+                                <div class="placeholder-icon">✨</div>
+                                <h3>Ready to Analyze</h3>
+                                <p>Enter text and click "Analyze Toxicity" to see detailed results</p>
+                            </div>
+
+                            <div class="results-content hidden" id="toxicity-results-content">
+                                <!-- Overall Score -->
+                                <div class="result-card score-card">
+                                    <div class="card-header">
+                                        <h3>Overall Toxicity</h3>
+                                        <div class="score-badge" id="score-badge">Clean</div>
+                                    </div>
+                                    <div class="toxicity-meter">
+                                        <div class="meter-bar">
+                                            <div class="meter-fill" id="meter-fill"></div>
+                                            <span class="meter-text" id="meter-text">0%</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Chart -->
+                                <div class="result-card chart-card">
+                                    <div class="card-header">
+                                        <h3>Toxicity Breakdown</h3>
+                                    </div>
+                                    <div class="chart-container">
+                                        <canvas id="chart-canvas"></canvas>
+                                    </div>
+                                </div>
+
+                                <!-- Categories -->
+                                <div class="result-card categories-card">
+                                    <div class="card-header">
+                                        <h3>Category Scores</h3>
+                                    </div>
+                                    <div class="categories-list" id="categories-list"></div>
+                                </div>
+
+                                <!-- Issues -->
+                                <div class="result-card issues-card">
+                                    <div class="card-header">
+                                        <h3>Detected Issues</h3>
+                                    </div>
+                                    <div class="issues-list" id="issues-list"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OCR Extractor View -->
+            <div class="tool-view" id="ocr-view">
+                <div class="workspace-layout">
+                    <div class="workspace-center">
+                        <div class="workspace-card">
+                            <div class="workspace-header">
+                                <h2>OCR Text Extractor</h2>
+                                <p class="workspace-subtitle">Extract text from images with OCR</p>
+                            </div>
+                            
+                            <div class="ocr-upload-area" id="ocr-upload-area">
+                                <input type="file" id="image-input" accept="image/*" style="display: none;">
+                                <div class="upload-content" id="upload-content">
+                                    <div class="upload-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                            <polyline points="17 8 12 3 7 8"/>
+                                            <line x1="12" y1="3" x2="12" y2="15"/>
+                                        </svg>
+                                    </div>
+                                    <h3>Upload an Image</h3>
+                                    <p>Drag & drop, paste (Ctrl+V), or click to browse</p>
+                                    <p class="upload-hint">Supports JPG, PNG, JPEG (Max 10MB)</p>
+                                    <button class="btn-primary" id="upload-trigger">Choose File</button>
+                                </div>
+                                
+                                <div class="image-preview-container hidden" id="image-preview-container">
+                                    <img id="image-preview" class="image-preview" alt="Preview">
+                                    <button class="remove-btn" id="remove-image-btn" aria-label="Remove image">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <line x1="18" y1="6" x2="6" y2="18"/>
+                                            <line x1="6" y1="6" x2="18" y2="18"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                
+                                <div class="ocr-loading hidden" id="ocr-loading">
+                                    <div class="spinner"></div>
+                                    <p>Extracting text from image...</p>
+                                </div>
+                            </div>
+                            
+                            <div class="ocr-actions">
+                                <button class="btn-primary" id="extract-btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                        <line x1="16" y1="13" x2="8" y2="13"/>
+                                        <line x1="16" y1="17" x2="8" y2="17"/>
+                                        <polyline points="10 9 9 9 8 9"/>
+                                    </svg>
+                                    <span>Extract Text</span>
+                                    <div class="btn-loader"></div>
+                                </button>
+                                <button class="btn-secondary" id="analyze-extracted-btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="11" cy="11" r="8"/>
+                                        <path d="M21 21l-4.35-4.35"/>
+                                    </svg>
+                                    Analyze Toxicity
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="workspace-right">
+                        <div class="results-panel" id="ocr-results">
+                            <div class="results-placeholder">
+                                <div class="placeholder-icon">📷</div>
+                                <h3>Ready to Extract</h3>
+                                <p>Upload an image to extract text and analyze toxicity</p>
+                            </div>
+
+                            <div class="results-content hidden" id="ocr-results-content">
+                                <!-- Extracted Text Card -->
+                                <div class="result-card extracted-text-card">
+                                    <div class="card-header">
+                                        <h3>Extracted Text</h3>
+                                        <button class="copy-btn" id="copy-text-btn">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                            </svg>
+                                            Copy
+                                        </button>
+                                    </div>
+                                    <div class="extracted-text" id="extracted-text-display"></div>
+                                </div>
+
+                                <!-- Toxicity Results (Hidden until analysis) -->
+                                <div class="ocr-toxicity-section hidden" id="ocr-toxicity-section">
+                                    <!-- Overall Score -->
+                                    <div class="result-card score-card">
+                                        <div class="card-header">
+                                            <h3>Overall Toxicity</h3>
+                                            <div class="score-badge" id="ocr-score-badge">Clean</div>
+                                        </div>
+                                        <div class="toxicity-meter">
+                                            <div class="meter-bar">
+                                                <div class="meter-fill" id="ocr-meter-fill"></div>
+                                                <span class="meter-text" id="ocr-meter-text">0%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Chart -->
+                                    <div class="result-card chart-card">
+                                        <div class="card-header">
+                                            <h3>Toxicity Breakdown</h3>
+                                        </div>
+                                        <div class="chart-container">
+                                            <canvas id="ocr-chart-canvas"></canvas>
+                                        </div>
+                                    </div>
+
+                                    <!-- Categories -->
+                                    <div class="result-card categories-card">
+                                        <div class="card-header">
+                                            <h3>Category Scores</h3>
+                                        </div>
+                                        <div class="categories-list" id="ocr-categories-list"></div>
+                                    </div>
+
+                                    <!-- Issues -->
+                                    <div class="result-card issues-card">
+                                        <div class="card-header">
+                                            <h3>Detected Issues</h3>
+                                        </div>
+                                        <div class="issues-list" id="ocr-issues-list"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard View -->
+            <div class="tool-view" id="dashboard-view">
+                <div class="dashboard-container">
+                    <div class="dashboard-header">
+                        <h1>Analytics Dashboard</h1>
+                        <button class="btn-secondary" id="clear-history-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"/>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            </svg>
+                            Clear History
+                        </button>
+                    </div>
+
+                    <div class="dashboard-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon safe">🛡️</div>
+                            <div class="stat-content">
+                                <h3 id="safe-percent">0%</h3>
+                                <p>Safe Content</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon toxic">⚠️</div>
+                            <div class="stat-content">
+                                <h3 id="toxic-percent">0%</h3>
+                                <p>Toxic Content</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon total">📊</div>
+                            <div class="stat-content">
+                                <h3 id="total-analyses">0</h3>
+                                <p>Total Analyses</p>
+                            </div>
+                        </div>
+                </div>
+
+                    <div class="history-section">
+                        <h2>Analysis History</h2>
+                        <div class="history-list" id="history-list">
+                            <div class="history-empty">
+                                <p>No analysis history yet. Start analyzing to see results here.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About View -->
+            <div class="tool-view" id="about-view">
+                <div class="about-container">
+                    <div class="about-card">
+                        <h1>About Chunky 3.5</h1>
+                        <p class="about-description">
+                            Chunky 3.5 is an content safety tool that helps you detect toxic comments,
+                            harmful English language, and extract text from images using advanced machine learning.
+                        </p>
+                        <div class="features-grid">
+                            <div class="feature-item">
+                                <div class="feature-icon">🔍</div>
+                                <h3>Toxicity Detection</h3>
+                                <p>Advanced BERT-based model for accurate toxicity classification</p>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">📷</div>
+                                <h3>OCR Extraction</h3>
+                                <p>Extract text from images with high accuracy using EasyOCR</p>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">📊</div>
+                                <h3>Analytics</h3>
+                                <p>Track and analyze your content safety metrics over time</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+            </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay hidden" id="loading-overlay">
+        <div class="loading-spinner">
+            <div class="spinner-circle"></div>
+            <p id="loading-text">Processing...</p>
+        </div>
+        </div>
+
+    <!-- Toast Notification -->
+    <div class="toast hidden" id="toast">
+        <span class="toast-icon"></span>
+        <span class="toast-message"></span>
+        <button class="toast-close" aria-label="Close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.1.2/dist/tesseract.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
